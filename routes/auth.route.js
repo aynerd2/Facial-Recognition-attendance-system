@@ -6,7 +6,7 @@ const authRouter = Router();
 
 authRouter.post('/signup', Signup);
 
-authRouter.get('/signin', Signin)
+authRouter.post('/signin', Signin)
 
 
 export default authRouter;

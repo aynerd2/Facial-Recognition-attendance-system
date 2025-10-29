@@ -9,7 +9,6 @@ export const Signup = async (req, res, next)=>{
     
       const session = await mongoose.startSession();
       session.startTransaction();
-
       try{
               const {name, email, password, track} = req.body;
 
@@ -35,13 +34,6 @@ export const Signup = async (req, res, next)=>{
 
        return res.status(201).json({
             message: "User created successfully",
-            user:{
-                  id: newUser[0]._id,
-                  name: newUser[0].name,
-                  email: newUser[0].email,
-                  track: newUser[0].track,
-                  token: token
-            }
       })
       }catch(error){
             await session.abortTransaction();
@@ -52,11 +44,39 @@ export const Signup = async (req, res, next)=>{
     
 }
 
-
-
-
-
-
 export const Signin = async (req, res, next) =>{
-     
+     try {
+
+      const {email, password} = req.body;
+      
+      if(!email || !password){
+            return res.status(400).json({message: "All fields are required"})
+      }
+      const User = await Auth.findOne({email});
+      if(!User){
+            return res.status(400).json({message: "User not found"})
+      }
+
+      const isPasswordValid = await bcrypt.compare(password, User.password)
+      if (!isPasswordValid){
+            return res.status(400).json({message: "Invalid Password"})
+      }
+      const token = jwt.sign({user: User.id},JWT_SECRET, {expiresIn: JWT_EXPIRES_IN})
+      res.status(200).json({
+            success: true,
+            message: "Signin Successful",
+            token: token,
+            data:{
+                 id: User.id,
+                 name: User.name,
+                 email: User.email,
+                 track: User.track
+            },
+
+      })
+      
+     } catch (error) {
+       next(error)
+     }
+
 }
