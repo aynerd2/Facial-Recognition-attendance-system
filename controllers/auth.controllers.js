@@ -27,7 +27,7 @@ export const Signup = async (req, res, next)=>{
 
        const newUser = await Auth.create([{name, email, password:hashpassword,track}], {session})
        
-       const token = jwt.sign({userId: newUser[0]._id, email: newUser[0]},JWT_SECRET,{expiresIn:JWT_EXPIRES_IN })
+      //  const token = jwt.sign({userId: newUser[0]._id, email: newUser[0]},JWT_SECRET,{expiresIn:JWT_EXPIRES_IN })
 
        await session.commitTransaction();
        session.endSession();

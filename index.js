@@ -22,7 +22,7 @@ app.use(express.urlencoded({extended: true}));
 
 
 app.use('/api/v1/auth', authRouter)
-app.use('/api/v1', enrollRouter)
+app.use('/api', enrollRouter)
 
 app.listen(PORT, ()=>{
       ConnectDb();
