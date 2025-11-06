@@ -158,29 +158,41 @@ export const autoMarkabsence = async (req,res,next)=>{
             // This will return all the list of the students in the database
             const students =  await Enroll.find({})
 
+            // Keeps counts of total numbers of students not present per day
             let MarkedCount = 0;
 
             for(const student of students){
+
+                  // Condition to check if a student attendance is marked or not for today
                   const markToday = student.attendance.some((record)=>{
-                        
+
                         // Get the date from the record
                         const recordDate = new Date(record.date)
 
                         // Check if the record date is within today
                         return recordDate >= Daybegins && recordDate <= DayEnds;
                   })
+
+                  // If the attendance is not marked! today
+                  if(!markToday){
+                        student.attendance.push({
+                              date:today,
+                              status: "absent"
+                        });
+
+                        await student.save();
+                        MarkedCount++
+                        console.log(`Auto Marked ${student.email} as absent for today ${today.toDateString()}`)
+
+                  }
+
             };
 
-
-
-
-
-
-
+            const message = `The total numbers of students marked absent today is ${MarkedCount}`
+            console.log(message)
 
       } catch (error) {
-            
-
+            console.error(`Error in auto marking: ${error.message}`)
       }
 
 }

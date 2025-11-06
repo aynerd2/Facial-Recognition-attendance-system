@@ -6,6 +6,9 @@ import enrollRouter from './routes/enroll.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';      
 import dotenv from 'dotenv';
+import cron from 'node-cron';
+import { autoMarkabsence } from './controllers/enroll.controllers.js';
+
 
 const app = express();
 dotenv.config();
@@ -25,6 +28,13 @@ app.use(express.urlencoded({extended: true}));
 
 app.use('/api/v1/auth', authRouter)
 app.use('/api', enrollRouter)
+
+
+cron.schedule('59 13 * * *', async ()=>{
+      console.log("Testing Auto marking")
+      await autoMarkabsence(null, null)
+})
+
 
 app.listen(PORT, ()=>{
       ConnectDb();
