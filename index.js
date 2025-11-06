@@ -3,11 +3,12 @@ import { ConnectDb } from './database/mongodb.js';
 import { PORT } from './config/env.js';
 import authRouter from './routes/auth.route.js';
 import enrollRouter from './routes/enroll.route.js';
+import attendanceRouter from './routes/attendance.route.js';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';      
 import dotenv from 'dotenv';
 import cron from 'node-cron';
-import { autoMarkabsence } from './controllers/enroll.controllers.js';
+import { autoMarkabsence } from './controllers/attendance.controller.js';
 
 
 const app = express();
@@ -27,7 +28,8 @@ app.use(express.urlencoded({extended: true}));
 
 
 app.use('/api/v1/auth', authRouter)
-app.use('/api', enrollRouter)
+app.use('/api/v1', enrollRouter)
+app.use('/api/v1/', attendanceRouter)
 
 
 cron.schedule('59 13 * * *', async ()=>{

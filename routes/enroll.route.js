@@ -1,8 +1,5 @@
 import { Router } from "express";
-import { 
-      enrollStudent,
-      MarkAttendance
-} from "../controllers/enroll.controllers.js";
+import { enrollStudent } from "../controllers/enroll.controllers.js";
 
 
 const enrollRouter = Router();
@@ -12,7 +9,5 @@ const enrollRouter = Router();
 enrollRouter.post('/enroll', enrollStudent);
 
 
-// Attendance routes
-enrollRouter.post('/attendance/mark', MarkAttendance);
 
 export default enrollRouter;
