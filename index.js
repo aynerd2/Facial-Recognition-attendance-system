@@ -16,7 +16,9 @@ app.use(cors({
       credentials: false,
       methods: ["GET", "POST", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
-}))
+}));
+
+
 app.use(express.urlencoded({extended: true}));
 
 

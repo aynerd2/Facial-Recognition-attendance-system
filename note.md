@@ -12,6 +12,7 @@
 # 5. Install cookie-parser - npm install cookie-parser
 # 6. Install Mongoose - npm install mongoose
 # 7. Jweb token and bcrypt - npm install jsonwebtoken bcryptjs
+# 8. Install node-cron - npm install node-cron
 
 
 # Project setup 

@@ -12,14 +12,14 @@ function isWeekend(date){
 // Helper function to know the start of the day
 function getStartOfDay(date){
       const start = new Date(date);
-      start.setHours(0,0,0,0);
+      start.setHours(9,0,0,0);
       return start
 }
 
 // Helper function to know end of the day
 function getEndOfDay(date){
       const end = new Date(date);
-      end.setHours(23,59,99,999);
+      end.setHours(13,59,99,999);
       return end
 }
 
@@ -48,7 +48,7 @@ export const enrollStudent = async (req, res, next) =>{
             if(!firstname || !lastname || !email || !phoneNumber || !gender || !track){
                   return res.status(400).json({message: "All fields are required"});
             }
-
+            
             const existingEnroll = await Enroll.findOne({email}).session(session);
             if(existingEnroll){
                   return res.status(400).json({message: "Student already enrolled"});
@@ -69,7 +69,7 @@ export const enrollStudent = async (req, res, next) =>{
 }
 
 
-export const markAttendDance = async (req,res,next)=>{
+export const MarkAttendance = async (req,res,next)=>{
       try {
             const {email} = req.body;
 
@@ -133,6 +133,55 @@ export const markAttendDance = async (req,res,next)=>{
 
 
 export const autoMarkabsence = async (req,res,next)=>{
+
+      try {
+            
+            // This helps to get todays date and time
+          const today = new Date()
+          
+            // Don't run if its a weekend
+            if(isWeekend(today)){
+                  const message = "Weekend - No auto-marking needed";
+                  console.log(message)
+
+                  if(res){
+                        return res.status(200).json({message})
+                  }
+
+                  return;
+            }
+
+            // This two logics helps to check if the current time is between 9am to 1:59pm
+            const Daybegins = getStartOfDay(today)
+            const DayEnds = getEndOfDay(today)
+
+            // This will return all the list of the students in the database
+            const students =  await Enroll.find({})
+
+            let MarkedCount = 0;
+
+            for(const student of students){
+                  const markToday = student.attendance.some((record)=>{
+                        
+                        // Get the date from the record
+                        const recordDate = new Date(record.date)
+
+                        // Check if the record date is within today
+                        return recordDate >= Daybegins && recordDate <= DayEnds;
+                  })
+            };
+
+
+
+
+
+
+
+
+      } catch (error) {
+            
+
+      }
 
 }
 
